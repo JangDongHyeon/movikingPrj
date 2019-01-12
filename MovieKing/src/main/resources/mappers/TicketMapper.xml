@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ticket">
+
+	<select id="getTheaterList" resultType="com.spring.movieKing.ticket.dvo.TheaterVO">
+	SELECT 
+	 DISTINCT (select theater_name from theater t where t.theater_uid=sd.theater_uid) as theater_name,theater_uid 
+	FROM 
+	schedule sd 
+	 WHERE movie_uid=#{movieCd};
+	</select>
+	
+	<select id="getDateList" parameterType="Map" resultType="com.spring.movieKing.ticket.dvo.ScheduleVO">
+		SELECT
+		 schedule_date,theater_time,schedule_uid
+		 FROM schedule
+		 WHERE movie_uid=#{movieCd} AND theater_uid=#{tUid}
+	
+	</select>
+	
+	<select id="getSeatList" resultType="com.spring.movieKing.ticket.dvo.SeatVO">
+		SELECT
+		 seat_uid,issue 
+		 FROM seat
+		  WHERE theater_uid=#{tUid}
+	
+	</select>
+	
+	<insert id="ticketInsert" parameterType="Map">
+		INSERT INTO
+		 ticket(schedule_uid,theater_uid,seat_uid,price)
+		VALUES(#{schedule_uid},#{tUid},#{nm},8000)
+		 
+	</insert>
+	
+	<update id="updateTicket">
+		UPDATE seat
+		 SET issue=1 
+		WHERE seat_uid=#{nm}
+	</update>
+	
+	<select id="ticketUidFind" resultType="String" parameterType="Map">
+		SELECT ticket_uid
+		 FROM ticket 
+		WHERE schedule_uid=#{schedule_uid}
+		 AND theater_uid=#{tUid} 
+		 AND seat_uid=#{nm}
+	</select>
+	
+	<insert id="reservationIn" parameterType="Map">
+		INSERT INTO reservation(ticket1_uid,ticket2_uid,ticket3_uid,ticket4_uid)
+		<include refid="reIn" />
+	</insert>
+	
+	<insert id="payMentIn" parameterType="Map">
+		INSERT INTO payment
+		(total_price,
+		payment_option,
+		payment_date,
+		idx,
+		reservation_uid,
+		total_ticket)
+		VALUES
+		(#{total},
+		'카드',
+		now(),
+		(select idx from users where username=#{user}),
+		(select reservation_uid from reservation where ticket1_uid=#{ticket_uid}),
+		#{size}
+		)
+
+	</insert>
+	
+	<select id="payMentList" resultType="com.spring.movieKing.ticket.dvo.PaymentVO">
+		SELECT * FROM 
+		payment
+		WHERE
+		idx=(select idx from users where username=#{user})
+	</select>
+	
+	<sql id="reIn">
+	  <if test="size==1">
+	  	VALUES(#{ticket1},null,null,null)
+	  </if>
+	    <if test="size==2">
+	  	VALUES(#{ticket1},#{ticket2},null,null)
+	  </if>
+	    <if test="size==3">
+	  	VALUES(#{ticket1},#{ticket2},#{ticket3},null)
+	  </if>
+	    <if test="size==4">
+	  	VALUES(#{ticket1},#{ticket2},#{ticket3},#{ticket4})
+	  </if>
+	  
+	</sql>
+	
+	
+	
+</mapper>

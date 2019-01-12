@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+		
+		 <security:http pattern="resources/css/**" security="none" />
+    	<security:http pattern="resources/img/**" security="none" />
+   		 <security:http pattern="resources/js/**" security="none" />
+		
+	<security:http use-expressions="true" auto-config="true">
+	<security:csrf disabled="false"/>
+		<security:intercept-url pattern="/"
+			access="permitAll" />
+		<security:intercept-url pattern="/user/**"
+			access="permitAll" />
+	
+		
+		<security:intercept-url pattern="/ticket/**"
+			access="hasAnyRole('USER, ADMIN')" />
+			
+
+		<security:form-login 
+		login-page="/user/login"
+			default-target-url="/" 
+			login-processing-url="/login"
+			username-parameter="username" 
+			password-parameter="password" />
+		<security:logout invalidate-session="true" 
+		logout-url="/logout"
+		 delete-cookies="JSESSIONID,SPRING_SECURITY_REMEMBER_ME_COOKIE"  
+
+			logout-success-url="/user/login?logout" />
+			
+ 
+<security:remember-me key="wmoskey" token-validity-seconds="2419200"/>
+	
+	 <security:session-management invalid-session-url="/user/login" session-fixation-protection="changeSessionId">
+
+        <security:concurrency-control max-sessions="1" expired-url="/user/login"/>
+
+    </security:session-management>
+
+
+
+
+	</security:http>
+	<!-- 	<bean id="passwordEncoder"
+		class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+	</bean> -->
+	
+	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	<security:authentication-manager>
+    <security:authentication-provider>
+<!--     <security:password-encoder hash="bcrypt"/>  -->
+    <security:jdbc-user-service 
+        data-source-ref="dataSource"
+
+        users-by-username-query="select username, password, enabled from users where username = ?"
+        authorities-by-username-query="select username, authority from authorities where username = ?"
+        group-authorities-by-username-query="select g.id, g.group_name, ga.authority from groupss g, group_members gm, group_authorities ga where gm.username = ? and g.id = ga.group_id and g.id = gm.group_id"
+    />
+    </security:authentication-provider>
+</security:authentication-manager>
+
+
+
+
+
+
+</beans>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  	PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	 <settings>
+         <setting name="jdbcTypeForNull" value="NULL" />
+    </settings>
+
+	<typeAliases>
+		<typeAlias alias="Map" type="java.util.Map" />
+		<typeAlias alias="HashMap" type="java.util.HashMap" />
+		<typeAlias alias="List" type="java.util.List" />
+		<typeAlias alias="String" type="java.lang.String" />
+		
+		
+		<typeAlias alias="TheaterVO" type="com.spring.movieKing.ticket.dvo.TheaterVO" />
+	</typeAliases>
+	
+</configuration>
