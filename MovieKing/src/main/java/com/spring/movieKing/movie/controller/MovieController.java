@@ -49,10 +49,17 @@ public class MovieController {
 	}
 	
 	@RequestMapping(value="/searchMovie")
-	public String searchMovie() {
-		return null;
+	public String searchMovie(@RequestParam("search")String nm,Model model) throws Exception {
+		model.addAttribute("movieNm",nm);
+		return "movies/search";
 		
 	}
+	@RequestMapping(value="/searchList/{movieNm}")
+	@ResponseBody	
+	public JSONArray getSearchMovie(@PathVariable("movieNm")String nm) throws Exception {
+		return moService.searchMovie(nm);
+	}
 	
+
 
 }

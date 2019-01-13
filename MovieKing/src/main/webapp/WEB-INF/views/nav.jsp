@@ -86,13 +86,12 @@
 					</sec:authorize>
 
 					<li class="nav-item">
-						<form action="#">
+				<form action="/movies/searchMovie">
 							<input type="text" name="search">
-						</form>
+							<input type="submit" class="btn btn-warning" value="검색">
+					</form>
 					</li>
-					<li class="nav-item">
-						<button class="btn btn-warning">검색</button>
-					</li>
+
 				</ul>
 			</div>
 		</div>

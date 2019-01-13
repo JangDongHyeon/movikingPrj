@@ -124,7 +124,7 @@ public class MovieServiceImpl implements MovieService {
 		BufferedInputStream reader = null;
 		try {
 			URL url = new URL(
-					"http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieList.json?"
+					"http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieList.json"
 							+ "?key=09ef5a1d8dc892084547547c61c96867" + "&movieNm="+nm);
 			
 			reader = new BufferedInputStream(url.openStream());
